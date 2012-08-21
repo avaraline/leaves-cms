@@ -1,4 +1,5 @@
 *.py[co]
+*.db
 
 # Packages
 *.egg
@@ -20,8 +21,14 @@ pip-log.txt
 .coverage
 .tox
 
-#Translations
+# Translations
 *.mo
 
-#Mr Developer
-.mr.developer.cfg
+# OSX/Windows cruft
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+Thumbs.db

@@ -1,0 +1,22 @@
+[
+    {
+        "pk": 1,
+        "model": "sites.site",
+        "fields": {
+            "domain": "http://localhost:8000",
+            "name": "Leaves"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "leaves.preferences",
+        "fields": {
+            "default_comment_status": "pending",
+            "stream_count": 10,
+            "analytics_id": "",
+            "site": 1,
+            "feed_count": 10,
+            "homepage": "blog-index"
+        }
+    }
+]

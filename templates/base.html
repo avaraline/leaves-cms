@@ -1,0 +1,26 @@
+{% load leaf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{% block title %}{{ site.name }}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css" />
+</head>
+<body>
+<div id="container">
+	<div id="header">
+		<a href="{% url home %}"><img alt="leaves" src="{{ STATIC_URL }}img/leaves_logo_spring.png" /></a>
+		{% if messages %}
+		<ul class="messages">
+		        {% for message in messages %}
+		        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		        {% endfor %}
+		</ul>
+		{% endif %}
+		<div style="clear:both;"></div>
+	</div>
+	<div id="nav">{% block navigation %}{% endblock %}</div>
+	<div id="content">{% block content %}{% endblock %}</div>
+	<div id="footer">{% block footer %}{% endblock %}</div>
+</div>
+</body>
+</html>
