@@ -79,6 +79,7 @@ SECRET_KEY = 'mt_&7bcp1a5zyrtqy8&amp;90+6$0q85^y4_o)6qfjnyv5lh21**t7'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    'leaves.utils.SiteThemeLoader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )

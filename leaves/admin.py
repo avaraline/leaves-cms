@@ -57,7 +57,7 @@ class LeafAdmin (admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'sites':
-    		kwargs['initial'] = Site.objects.all()
+            kwargs['initial'] = Site.objects.all()
         return super(LeafAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
 class CommentAdmin (admin.ModelAdmin):

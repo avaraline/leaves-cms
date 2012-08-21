@@ -3,8 +3,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse, resolve
 from django.contrib.sites.models import Site
 from django.core.paginator import Paginator, InvalidPage
+from django.template.base import TemplateDoesNotExist
+from django.template.loader import BaseLoader
+from django.utils import importlib
 import itertools
 import hashlib
+import os
 
 class Homepage (object):
     """
@@ -69,8 +73,6 @@ def template_context(request):
         'site': request.site,
     }
 
-CACHED_SITE = None
-
 def get_site():
     """
     Returns the current Site object. If this is called while handling a request,
@@ -81,9 +83,7 @@ def get_site():
         from leaves.middleware import request_context
         return request_context.site
     except:
-        if CACHED_SITE is None:
-            CACHED_SITE = Site.objects.select_related('preferences').get(pk=settings.SITE_ID)
-        return CACHED_SITE
+        return Site.objects.select_related('preferences').get(pk=settings.SITE_ID)
 
 def get_page(request, queryset, per_page=None):
     """
@@ -105,3 +105,17 @@ def get_page(request, queryset, per_page=None):
     except InvalidPage:
         page = paginator.page(paginator.num_pages)
     return page
+
+class SiteThemeLoader (BaseLoader):
+    is_usable = True
+
+    def load_template_source(self, template_name, template_dirs=None):
+        try:
+            theme_app = get_site().preferences.theme
+            theme_mod = importlib.import_module(theme_app)
+            template_path = os.path.join(os.path.dirname(theme_mod.__file__), 'templates', template_name)
+            with open(template_path, 'rb') as fp:
+                return (fp.read().decode(settings.FILE_CHARSET), template_path)
+        except:
+            pass
+        raise TemplateDoesNotExist(template_name)

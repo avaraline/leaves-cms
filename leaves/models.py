@@ -211,7 +211,7 @@ class Redirect (models.Model):
 class Preferences (models.Model):
     site = models.OneToOneField(Site, verbose_name=_('site'), unique=True, related_name='preferences')
     homepage = models.CharField(_('homepage'), max_length=200, choices=homepage)
-#    theme = models.CharField(_('theme'), max_length=100, choices=settings.AVAILABLE_THEMES, default='default')
+    theme = models.CharField(_('theme'), max_length=100, default='themes.stream')
     stream_count = models.PositiveIntegerField(_('stream count'), default=10)
     feed_count = models.PositiveIntegerField(_('feed count'), default=10)
     analytics_id = models.CharField(_('analytics id'), max_length=50, blank=True)
@@ -226,8 +226,8 @@ class Page (Leaf):
     slug = models.SlugField(_('slug'), unique=True)
     summary = models.TextField(_('summary'), blank=True)
     content = models.TextField(_('content'))
-#    show_in_navigation = models.BooleanField(_('show in navigation'), default=True,
-#        help_text=_('When checked, this content will appear in your site navigation.'))
+    show_in_navigation = models.BooleanField(_('show in navigation'), default=True,
+        help_text=_('When checked, this content will appear in your site navigation.'))
 
     objects = LeafManager()
 
