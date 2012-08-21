@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from leaves.blog.models import Post
+from leaves.plugins.blog.models import Post
 from leaves.utils import get_page
 
 def index(request):

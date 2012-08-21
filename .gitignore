@@ -1,6 +1,9 @@
 *.py[co]
 *.db
 
+# Static files (via collectstatic)
+static/*
+
 # Packages
 *.egg
 *.egg-info

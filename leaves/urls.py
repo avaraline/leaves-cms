@@ -14,5 +14,5 @@ urlpatterns = patterns('',
 
 # Configure plugin URLs here.
 urlpatterns += patterns('',
-    url('^blog/', include('leaves.blog.urls')),
+    url('^blog/', include('leaves.plugins.blog.urls')),
 )
