@@ -3,14 +3,20 @@ from django.template import loader
 from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.conf import settings
-from leaves.models import Leaf
+from leaves.models import Leaf, Page
 from leaves.utils import get_site
 from leaves.middleware import request_context
 
 register = template.Library()
 
+@register.simple_tag
+def leaf_summary(leaf):
+    return loader.render_to_string(leaf.get_summary_templates(), {
+        leaf.leaf_type.model: leaf.resolved,
+    })
+
 @register.assignment_tag
-def leaf_stream(*types, **kwargs):
+def get_leaves(*types, **kwargs):
     site = kwargs.get('site', get_site())
     user = kwargs.get('user', getattr(request_context, 'user', None))
     author = kwargs.get('author', None)
@@ -26,8 +32,8 @@ def leaf_stream(*types, **kwargs):
         qs = qs.filter(tags__slug__iexact=tag)
     return [leaf.resolved for leaf in qs[:num]]
 
-@register.simple_tag
-def leaf_summary(leaf):
-    return loader.render_to_string(leaf.get_summary_templates(), {
-        leaf.leaf_type.model: leaf.resolved,
-    })
+@register.assignment_tag
+def get_navigation_pages(*args, **kwargs):
+    site = kwargs.get('site', get_site())
+    user = kwargs.get('user', getattr(request_context, 'user', None))
+    return Page.objects.published(site=site, user=user).filter(show_in_navigation=True)

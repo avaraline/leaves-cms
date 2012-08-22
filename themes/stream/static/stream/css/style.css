@@ -21,6 +21,17 @@ a.watermark img {
     width: 100px;
 }
 
+#nav {
+    text-align: center;
+    padding: 5px;
+    font-family: 'Cabin Condensed', sans-serif;
+    border-bottom: 1px solid #ddd;
+}
+#nav a { color: #999; }
+#nav span.spacer { color: #999; display: inline-block; width: 20px; text-align: center; }
+
+#content { margin-top: 40px; }
+
 .stream {
     position: relative;
     margin-bottom: 40px;
@@ -31,6 +42,7 @@ h1 {
     font-family: 'Condiment', cursive;
     border-bottom: 1px solid #ddd;
     text-align: right;
+    margin-bottom: 0px;
 }
 h1 a { color: #777; text-decoration: none; }
 h2 {

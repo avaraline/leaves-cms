@@ -36,14 +36,6 @@ class LeafAdmin (admin.ModelAdmin):
     inlines = (AttachmentInline,)
     actions = ('publish',)
 
-    def url(self, obj):
-        if obj.custom_url:
-            return obj.custom_url
-        elif hasattr(obj, 'get_absolute_url'):
-            return obj.get_absolute_url()
-        return ''
-    url.short_description = 'URL'
-
     def publish(self, request, queryset):
         update_count = queryset.update(status='published')
         term = 'leaf was' if update_count == 1 else 'leaves were'
@@ -95,7 +87,7 @@ class PreferencesAdmin (admin.ModelAdmin):
 class PageAdmin (LeafAdmin):
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug', 'summary', 'content', 'show_in_navigation'),
+            'fields': ('title', 'slug', 'summary', 'content', 'show_in_navigation', 'rank'),
         }),
         PUBLISHING_OPTIONS,
         ADVANCED_PUBLISHING_OPTIONS,

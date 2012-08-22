@@ -36,10 +36,14 @@ class LeavesSiteMiddleware (object):
             if best_match:
                 request.site = best_match
         request_context.site = request.site
+        # Also keep track of the current user. Helpful for template tags.
+        request_context.user = request.user
 
     def process_response(self, request, response):
         if hasattr(request_context, 'site'):
             del request_context.site
+        if hasattr(request_context, 'user'):
+            del request_context.user
         return response
 
 class LeavesFallbackMiddleware (object):

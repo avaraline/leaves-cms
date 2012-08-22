@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load leaf %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +23,15 @@
 		{% endif %}
 		<div style="clear:both;"></div>
 	</div>
-	<div id="nav">{% block navigation %}{% endblock %}</div>
+	{% get_navigation_pages as nav_pages %}
+	{% if nav_pages %}
+		<div id="nav">
+			{% for page in nav_pages %}
+			<a href="{{ page.url }}">{{ page }}</a>
+			{% if not forloop.last %}<span class="spacer">&bull;</span>{% endif %}
+			{% endfor %}
+		</div>
+	{% endif %}
 	<div id="content">{% block content %}{% endblock %}</div>
 	<div id="footer">{% block footer %}{% endblock %}</div>
 </div>

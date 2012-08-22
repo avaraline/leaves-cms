@@ -109,6 +109,10 @@ class Leaf (models.Model):
         return getattr(self, self.leaf_type.model)
     resolved = property(resolve)
 
+    def get_url(self):
+        return self.custom_url or self.get_absolute_url()
+    url = property(get_url)
+
     def get_page_templates(self):
         return (
             self.page_template,
@@ -229,8 +233,13 @@ class Page (Leaf):
     content = models.TextField(_('content'))
     show_in_navigation = models.BooleanField(_('show in navigation'), default=True,
         help_text=_('When checked, this content will appear in your site navigation.'))
+    rank = models.IntegerField(_('rank'), default=0,
+        help_text=_('Determines the ordering of pages, i.e. for navigation.'))
 
     objects = LeafManager()
+
+    class Meta:
+        ordering = ('rank',)
 
     def __unicode__(self):
         return self.title
