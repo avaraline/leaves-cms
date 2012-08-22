@@ -4,12 +4,12 @@ from django.contrib.sites.models import Site
 from leaves.models import Tag, Comment, Attachment, Redirect, Preferences, Page
 
 PUBLISHING_OPTIONS = (_('Publishing Options'), {
-    'fields': ('author', 'author_name', 'status', 'date_published', 'date_expires', 'tags'),
+    'fields': ('author', 'author_name', 'status', 'date_published', 'date_expires', 'tags', 'show_in_stream'),
 })
 
 ADVANCED_PUBLISHING_OPTIONS = (_('Advanced Publishing Options'), {
     'classes': ('collapse',),
-    'fields': ('sites', 'show_in_stream', 'allow_comments', 'password', 'custom_url', 'summary_template',
+    'fields': ('sites', 'allow_comments', 'password', 'custom_url', 'summary_template',
                'page_template'),
 })
 
@@ -34,6 +34,7 @@ class LeafAdmin (admin.ModelAdmin):
     list_select_related = True
     date_hierarchy = 'date_published'
     inlines = (AttachmentInline,)
+    actions = ('publish',)
 
     def url(self, obj):
         if obj.custom_url:
@@ -42,6 +43,12 @@ class LeafAdmin (admin.ModelAdmin):
             return obj.get_absolute_url()
         return ''
     url.short_description = 'URL'
+
+    def publish(self, request, queryset):
+        update_count = queryset.update(status='published')
+        term = 'leaf was' if update_count == 1 else 'leaves were'
+        self.message_user(request, '%s %s published.' % (update_count, term))
+    publish.short_description = 'Mark selected leaves as published'
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'author_name' and 'request' in kwargs:
@@ -88,7 +95,7 @@ class PreferencesAdmin (admin.ModelAdmin):
 class PageAdmin (LeafAdmin):
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug', 'summary', 'content'),
+            'fields': ('title', 'slug', 'summary', 'content', 'show_in_navigation'),
         }),
         PUBLISHING_OPTIONS,
         ADVANCED_PUBLISHING_OPTIONS,

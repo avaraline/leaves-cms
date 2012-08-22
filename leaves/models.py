@@ -90,6 +90,7 @@ class Leaf (models.Model):
 
     class Meta:
         verbose_name_plural = 'leaves'
+        ordering = ('-date_published',)
 
     def __unicode__(self):
         return u'%s: %s' % (self.leaf_type.model_class().__name__, unicode(self.resolved))

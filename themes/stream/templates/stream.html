@@ -3,9 +3,7 @@
 
 {% block content %}
     {% for leaf in page.object_list %}
-        <div class="stream">
-            {% leaf_summary leaf %}
-        </div>
+        <div class="stream leaf-{{ leaf.leaf_type.model }}">{% leaf_summary leaf %}</div>
     {% empty %}
         <div class="stream">There are no leaves to display.</div>
     {% endfor %}

@@ -103,7 +103,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'leaves.middleware.LeavesSiteMiddleware',
     'leaves.middleware.LeavesFallbackMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'leaves.urls'
 
@@ -127,6 +130,7 @@ INSTALLED_APPS = (
     'leaves.plugins.blog',
     # Installed themes.
     'themes.stream',
+#    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging

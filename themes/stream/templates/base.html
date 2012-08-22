@@ -4,12 +4,15 @@
 <html lang="en">
 <head>
 	<title>{% block title %}{{ site.name }}{% endblock %}</title>
+	<link href="http://fonts.googleapis.com/css?family=Condiment" rel="stylesheet" type="text/css" />
+	<link href="http://fonts.googleapis.com/css?family=Cabin+Condensed" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="{% static "stream/css/style.css" %}" />
 </head>
 <body>
+<a href="http://leaves-cms.org" class="watermark"><img alt="leaves" src="{% static "leaves_logo_spring.png" %}" /></a>
 <div id="container">
 	<div id="header">
-		<a href="{% url home %}"><img alt="leaves" src="{% static "leaves_logo_spring.png" %}" /></a>
+		<h1><a href="{% url home %}">{{ site.name }}</a></h1>
 		{% if messages %}
 		<ul class="messages">
 		        {% for message in messages %}

@@ -7,6 +7,12 @@ from leaves.utils import homepage, get_page
 def index(request):
     return homepage.render(request)
 
+def recent(request):
+    qs = Leaf.objects.stream(site=request.site, user=request.user)
+    return render(request, 'index.html', {
+        'page': get_page(request, qs, request.site.preferences.stream_count),
+    })
+
 def page_view(request, slug):
     qs = Page.objects.published(site=request.site, user=request.user)
     page = get_object_or_404(qs, slug__iexact=slug)
