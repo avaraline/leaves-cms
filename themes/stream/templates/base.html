@@ -6,7 +6,7 @@
 <head>
 	<title>{% block title %}{{ site.name }}{% endblock %}</title>
 	<link href="http://fonts.googleapis.com/css?family=Condiment" rel="stylesheet" type="text/css" />
-	<link href="http://fonts.googleapis.com/css?family=Cabin+Condensed" rel="stylesheet" type="text/css" />
+	<link href="http://fonts.googleapis.com/css?family=Cabin" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="{% static "stream/css/style.css" %}" />
 </head>
 <body>
@@ -14,13 +14,6 @@
 <div id="container">
 	<div id="header">
 		<h1><a href="{% url home %}">{{ site.name }}</a></h1>
-		{% if messages %}
-		<ul class="messages">
-		        {% for message in messages %}
-		        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-		        {% endfor %}
-		</ul>
-		{% endif %}
 		<div style="clear:both;"></div>
 	</div>
 	{% get_navigation_pages as nav_pages %}
@@ -31,6 +24,13 @@
 			{% if not forloop.last %}<span class="spacer">&bull;</span>{% endif %}
 			{% endfor %}
 		</div>
+	{% endif %}
+	{% if messages %}
+		<ul class="messages">
+	        {% for message in messages %}
+	        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	        {% endfor %}
+		</ul>
 	{% endif %}
 	<div id="content">{% block content %}{% endblock %}</div>
 	<div id="footer">{% block footer %}{% endblock %}</div>

@@ -147,25 +147,24 @@ class Comment (models.Model):
     )
 
     leaf = models.ForeignKey(Leaf, verbose_name=_('leaf'), related_name='comments')
-    title = models.CharField(_('title'), max_length=200, blank=True)
+    reply_to = models.ForeignKey('self', verbose_name=_('in reply to'), blank=True, null=True, related_name='replies')
     author_name = models.CharField(_('author name'), max_length=50)
     user = models.ForeignKey(User, verbose_name=_('user'), blank=True, null=True, related_name='comments')
-    email = models.EmailField(_('email'))
+    email = models.EmailField(_('email'), help_text=_('Your email address will never be shown publicly.'))
     website = models.URLField(_('website'), blank=True, verify_exists=False)
-    twitter = models.CharField(_('twitter'), max_length=15, blank=True)
     status = models.CharField(_('status'), max_length=10, choices=STATUS_CHOICES, db_index=True,
         default=settings.LEAVES_DEFAULT_COMMENT_STATUS)
     date_posted = models.DateTimeField(_('date posted'), default=timezone.now)
-    blessings = models.IntegerField(_('blessings'), default=0)
-    curses = models.IntegerField(_('curses'), default=0)
     comment = models.TextField(_('comment'))
-    parent = models.ForeignKey('self', verbose_name=_('parent'), blank=True, null=True, related_name='children')
 
     class Meta:
         ordering = ('date_posted',)
 
     def __unicode__(self):
-        return self.title
+        return unicode(self.pk)
+
+    def get_absolute_url(self):
+        return self.leaf.resolved.url + '#comment-%s' % self.pk
 
 class Attachment (models.Model):
     leaf = models.ForeignKey(Leaf, verbose_name=_('leaf'), related_name='attachments')

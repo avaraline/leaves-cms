@@ -60,10 +60,10 @@ class LeafAdmin (admin.ModelAdmin):
         return super(LeafAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
 class CommentAdmin (admin.ModelAdmin):
-    list_display = ('leaf', 'title', 'author_name', 'email', 'status', 'date_posted')
+    list_display = ('leaf', 'reply_to', 'author_name', 'email', 'status', 'date_posted')
     list_filter = ('date_posted', 'status', 'leaf__sites')
     date_hierarchy = 'date_posted'
-    search_fields = ('title', 'comment', 'author_name', 'email')
+    search_fields = ('comment', 'author_name', 'email')
     actions = ('approve_comments',)
     ordering = ('-date_posted',)
 

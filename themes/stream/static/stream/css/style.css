@@ -24,7 +24,8 @@ a.watermark img {
 #nav {
     text-align: center;
     padding: 5px;
-    font-family: 'Cabin Condensed', sans-serif;
+    font-family: 'Cabin', sans-serif;
+    font-size: 90%;
     border-bottom: 1px solid #ddd;
 }
 #nav a { color: #999; }
@@ -36,7 +37,6 @@ a.watermark img {
     position: relative;
     margin-bottom: 40px;
 }
-.stream p { margin-left: 10px; }
 
 h1 {
     font-family: 'Condiment', cursive;
@@ -53,7 +53,7 @@ h2 {
 }
 h2 a { text-decoration: none; color: #777; }
 p {
-    font-family: 'Cabin Condensed', sans-serif;
+    font-family: 'Cabin', sans-serif;
     margin-top: 0px;
 }
 p.byline {
@@ -65,3 +65,15 @@ p.byline {
     font-size: 75%;
     color: #999;
 }
+
+table.comment { margin-top: 40px; }
+table.comment th, table.comment td {
+    font-family: 'Cabin', sans-serif;
+    text-align: left;
+    vertical-align: top;
+    padding-bottom: 4px;
+}
+table.comment th {
+    padding-right: 20px;
+}
+

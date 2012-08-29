@@ -2,6 +2,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse, resolve
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import AnonymousUser
 from django.core.paginator import Paginator, InvalidPage
 from django.template.base import TemplateDoesNotExist
 from django.template.loader import BaseLoader
@@ -71,6 +72,7 @@ def attachment_checksum(f):
 def template_context(request):
     return {
         'site': request.site,
+        'post_data': request.POST if request.method == 'POST' else None,
     }
 
 def get_site():
@@ -84,6 +86,17 @@ def get_site():
         return request_context.site
     except:
         return Site.objects.select_related('preferences').get(pk=settings.SITE_ID)
+
+def get_user():
+    """
+    Returns the current User object. If this is called while handling a request,
+    it is equivalent to request.user. Otherwise, returns an AnonymousUser object.
+    """
+    try:
+        from leaves.middleware import request_context
+        return request_context.user
+    except:
+        return AnonymousUser()
 
 def get_page(request, queryset, per_page=None):
     """

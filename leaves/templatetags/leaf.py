@@ -4,8 +4,8 @@ from django.utils.encoding import force_unicode
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from leaves.models import Leaf, Page
-from leaves.utils import get_site
-from leaves.middleware import request_context
+from leaves.utils import get_site, get_user
+from leaves.comments import make_comment_form
 
 register = template.Library()
 
@@ -18,7 +18,7 @@ def leaf_summary(leaf):
 @register.assignment_tag
 def get_leaves(*types, **kwargs):
     site = kwargs.get('site', get_site())
-    user = kwargs.get('user', getattr(request_context, 'user', None))
+    user = kwargs.get('user', get_user())
     author = kwargs.get('author', None)
     tag = kwargs.get('tag', None)
     num = int(kwargs.get('num', site.preferences.stream_count))
@@ -35,5 +35,14 @@ def get_leaves(*types, **kwargs):
 @register.assignment_tag
 def get_navigation_pages(*args, **kwargs):
     site = kwargs.get('site', get_site())
-    user = kwargs.get('user', getattr(request_context, 'user', None))
+    user = kwargs.get('user', get_user())
     return Page.objects.published(site=site, user=user).filter(show_in_navigation=True)
+
+@register.assignment_tag
+def get_comment_form(leaf, **kwargs):
+    print 'GET COMMENT FORM'
+    data = kwargs.get('data', None)
+    site = kwargs.get('site', get_site())
+    user = kwargs.get('user', get_user())
+    print data, site, user
+    return make_comment_form(leaf, data=data, site=site, user=user)
