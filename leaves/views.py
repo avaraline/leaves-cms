@@ -37,13 +37,3 @@ def author_view(request, username):
         'author': author,
         'page': get_page(request, qs, request.site.preferences.stream_count),
     })
-
-def post_comment(request, leaf_id):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
-    leaf = get_object_or_404(Leaf, pk=leaf_id)
-    status = 'published' if request.user.is_authenticated() else request.site.preferences.default_comment_status
-    parent = None
-    form = CommentForm(request.POST, leaf=leaf, user=request.user, status=status, parent=parent)
-    if form.is_valid():
-        comment = form.save()

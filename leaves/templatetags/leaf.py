@@ -40,9 +40,7 @@ def get_navigation_pages(*args, **kwargs):
 
 @register.assignment_tag
 def get_comment_form(leaf, **kwargs):
-    print 'GET COMMENT FORM'
     data = kwargs.get('data', None)
     site = kwargs.get('site', get_site())
     user = kwargs.get('user', get_user())
-    print data, site, user
     return make_comment_form(leaf, data=data, site=site, user=user)
