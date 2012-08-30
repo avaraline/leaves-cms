@@ -12,11 +12,13 @@
         "model": "leaves.preferences",
         "fields": {
             "default_comment_status": "pending",
+            "default_language": "en",
             "stream_count": 10,
             "analytics_id": "",
             "site": 1,
             "feed_count": 10,
-            "homepage": "recent"
+            "homepage": "recent",
+            "theme": "themes.stream"
         }
     }
 ]

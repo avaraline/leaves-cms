@@ -82,7 +82,8 @@ class RedirectAdmin (admin.ModelAdmin):
     list_filter = ('site', 'redirect_type')
 
 class PreferencesAdmin (admin.ModelAdmin):
-    list_display = ('site', 'homepage', 'stream_count', 'feed_count', 'analytics_id', 'default_comment_status')
+    list_display = ('site', 'homepage', 'default_language', 'theme', 'stream_count', 'feed_count', 'analytics_id',
+        'default_comment_status')
 
 class PageAdmin (LeafAdmin):
     fieldsets = (

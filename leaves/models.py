@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from leaves.managers import NaturalKeyManager, LeafManager
-from leaves.utils import language_choices, default_language, attachment_path, attachment_checksum, homepage
+from leaves.utils import *
 
 class Tag (models.Model):
     name = models.CharField(max_length=100)
@@ -215,10 +215,12 @@ class Redirect (models.Model):
 class Preferences (models.Model):
     site = models.OneToOneField(Site, verbose_name=_('site'), unique=True, related_name='preferences')
     homepage = models.CharField(_('homepage'), max_length=200, choices=homepage)
-    theme = models.CharField(_('theme'), max_length=100, default='themes.stream')
+    theme = models.CharField(_('theme'), max_length=100, choices=theme_choices())
     stream_count = models.PositiveIntegerField(_('stream count'), default=10)
     feed_count = models.PositiveIntegerField(_('feed count'), default=10)
     analytics_id = models.CharField(_('analytics id'), max_length=50, blank=True)
+    default_language = models.CharField(_('default language'), max_length=10, choices=language_choices(),
+        default=default_language)
     default_comment_status = models.CharField(_('default comment status'), max_length=10,
         choices=Comment.STATUS_CHOICES, default=settings.LEAVES_DEFAULT_COMMENT_STATUS)
 

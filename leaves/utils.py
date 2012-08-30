@@ -7,6 +7,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.template.base import TemplateDoesNotExist
 from django.template.loader import BaseLoader
 from django.utils import importlib
+from django.db.models import get_apps
 import itertools
 import hashlib
 import os
@@ -56,6 +57,12 @@ def default_language():
     if lang in available_codes:
         return lang
     return 'en'
+
+def theme_choices():
+    for app in get_apps():
+        if hasattr(app, 'LEAVES_THEME_NAME'):
+            app_mod = app.__name__.rsplit('.', 1)[0]
+            yield app_mod, app.LEAVES_THEME_NAME
 
 def attachment_path(instance, filename):
     return 'attachments/%s/%s/%s' % (instance.leaf.leaf_type.model, instance.leaf.pk, filename)

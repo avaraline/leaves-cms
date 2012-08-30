@@ -4,6 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+DEBUG_TOOLBAR = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -103,10 +104,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'leaves.middleware.LeavesSiteMiddleware',
     'leaves.middleware.LeavesFallbackMiddleware',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
-
-INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'leaves.urls'
 
@@ -130,7 +128,6 @@ INSTALLED_APPS = (
     'leaves.plugins.blog',
     # Installed themes.
     'themes.stream',
-#    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -164,3 +161,8 @@ LOGGING = {
 
 LEAVES_DEFAULT_LEAF_STATUS = 'draft'
 LEAVES_DEFAULT_COMMENT_STATUS = 'pending'
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS += ('debug_toolbar',)
+    INTERNAL_IPS = ('127.0.0.1',)
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
