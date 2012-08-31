@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from leaves.utils import get_site, get_user, get_language
 
 class NaturalKeyManager (models.Manager):
     """
@@ -21,26 +22,41 @@ class LeafManager (NaturalKeyManager):
 
     def get_query_set(self):
         qs = super(LeafManager, self).get_query_set()
-        # Get all the non-null ForeignKey fields.
-        related = [f.name for f in self.model._meta.fields if isinstance(f, models.ForeignKey) and not f.null]
-        if self.model.__name__ == 'Leaf':
-            # Now get all the subclasses of Leaf to select the reverse relation of the OneToOneFields.
-            related += [cls.__name__.lower() for cls in self.model.__subclasses__()]
+        related = getattr(self.model, '_leaves_related_field_names', None)
+        if related is None:
+            # Get all the non-null ForeignKey fields.
+            related = [f.name for f in self.model._meta.fields if isinstance(f, models.ForeignKey) and not f.null]
+            if self.model.__name__ == 'Leaf':
+                # Now get all the subclasses of Leaf to select the reverse relation of the OneToOneFields.
+                related += [cls.__name__.lower() for cls in self.model.__subclasses__()]
+            self.model._leaves_related_field_names = related
         return qs.select_related(*related)
 
-    def published(self, site=None, user=None, asof=None):
+    def published(self, site=None, user=None, language=None, asof=None, bypass=False):
+        if site is None:
+            site = get_site()
+        if user is None:
+            user = get_user()
         if asof is None:
             asof = timezone.now()
-        exp = models.Q(date_expires__isnull=True) | models.Q(date_expires__gt=asof)
-        q = models.Q(status='published') & models.Q(date_published__lte=asof) & exp
-        if site:
-            q &= models.Q(sites__in=(site,))
-        # Show the user's leaves in the published stream, even if they aren't. This is particularly useful for the
-        # admin's "Show on site" feature.
-        if user and user.is_authenticated():
-            q |= models.Q(author=user)
-        return self.get_query_set().filter(q)
+        q_exp = models.Q(date_expires__isnull=True) | models.Q(date_expires__gt=asof)
+        q_pub = models.Q(status='published') & models.Q(date_published__lte=asof)
+        q_auth = models.Q(author=user)
+        qs = self.get_query_set().filter(sites__pk=site.pk)
+        if language:
+            qs = qs.filter(language=language)
+        else:
+            qs = qs.filter(translation_of__isnull=True)
+        if bypass:
+            if user.is_superuser:
+                # Superusers can see anything on the site, if we're bypassing the publishing checks.
+                return qs
+            elif user.is_authenticated():
+                # Otherwise, an authenticated user may see unpublished leaves if they are the author.
+                return qs.filter((q_exp & q_pub) | q_auth)
+        # By default, make sure only published, unexpired leaves are returned.
+        return qs.filter(q_exp & q_pub)
 
-    def stream(self, site=None, user=None, asof=None):
-        qs = self.published(site=site, user=user, asof=asof)
+    def stream(self, site=None, user=None, language=None, asof=None, bypass=False):
+        qs = self.published(site=site, user=user, language=language, asof=asof, bypass=bypass)
         return qs.filter(show_in_stream=True)

@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.contrib.sites.models import Site
-from leaves.models import Tag, Comment, Attachment, Redirect, Preferences, Page
+from leaves.models import Leaf, Tag, Comment, Attachment, Redirect, Preferences, Page
 
 PUBLISHING_OPTIONS = (_('Publishing Options'), {
     'fields': ('author', 'author_name', 'status', 'date_published', 'date_expires', 'tags', 'show_in_stream'),
@@ -52,6 +52,9 @@ class LeafAdmin (admin.ModelAdmin):
             if not request.user.is_superuser:
                 kwargs['queryset'] = User.objects.filter(pk=request.user.pk)
             kwargs['initial'] = request.user.pk
+        elif db_field.name == 'translation_of':
+            # Only show "root" leaves, i.e. those that are not translations of other leaves.
+            kwargs['queryset'] = Leaf.objects.filter(translation_of__isnull=True)
         return super(LeafAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):

@@ -11,10 +11,11 @@ urlpatterns = patterns('',
     url(r'^page/(?P<slug>[^/]+)/$', 'leaves.views.page_view', name='page-view'),
     url(r'^tag/(?P<slug>[^/]+)/$', 'leaves.views.tag_view', name='tag-view'),
     url(r'^author/(?P<username>[^/]+)/$', 'leaves.views.author_view', name='author-view'),
+    url(r'^lang/(?P<lang>[^/]+)/$', 'leaves.views.set_language', name='language'),
     url(r'^admin/', include(admin.site.urls)),
 )
 
-# Configure plugin URLs here.
+# Configure plugin URLs here. Should these be dynamically discovered based on INSTALLED_APPS?
 urlpatterns += patterns('',
     url('^blog/', include('leaves.plugins.blog.urls')),
 )

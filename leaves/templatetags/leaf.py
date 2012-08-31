@@ -17,12 +17,11 @@ def leaf_summary(leaf):
 
 @register.assignment_tag
 def get_leaves(*types, **kwargs):
-    site = kwargs.get('site', get_site())
-    user = kwargs.get('user', get_user())
+    site = get_site()
     author = kwargs.get('author', None)
     tag = kwargs.get('tag', None)
     num = int(kwargs.get('num', site.preferences.stream_count))
-    qs = Leaf.objects.stream(site=site, user=user)
+    qs = Leaf.objects.stream()
     if types:
         models = [t.lower() for t in types]
         qs = qs.filter(leaf_type__model__in=models)
@@ -34,13 +33,9 @@ def get_leaves(*types, **kwargs):
 
 @register.assignment_tag
 def get_navigation_pages(*args, **kwargs):
-    site = kwargs.get('site', get_site())
-    user = kwargs.get('user', get_user())
-    return Page.objects.published(site=site, user=user).filter(show_in_navigation=True)
+    return Page.objects.published().filter(show_in_navigation=True)
 
 @register.assignment_tag
 def get_comment_form(leaf, **kwargs):
     data = kwargs.get('data', None)
-    site = kwargs.get('site', get_site())
-    user = kwargs.get('user', get_user())
-    return make_comment_form(leaf, data=data, site=site, user=user)
+    return make_comment_form(leaf, data=data)

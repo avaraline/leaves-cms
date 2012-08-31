@@ -8,6 +8,7 @@ from django.template.base import TemplateDoesNotExist
 from django.template.loader import BaseLoader
 from django.utils import importlib
 from django.db.models import get_apps
+from django.shortcuts import redirect
 import itertools
 import hashlib
 import os
@@ -105,6 +106,17 @@ def get_user():
     except:
         return AnonymousUser()
 
+def get_language():
+    """
+    Returns the current language. If one is set while handling a request, it is
+    returned here. Otherwise, the current site's default language is returned.
+    """
+    try:
+        from leaves.middleware import request_context
+        return request_context.language
+    except:
+        return get_site().preferences.default_language
+
 def get_page(request, queryset, per_page=None):
     """
     Returns a django.core.pagination.Page object based on the page number
@@ -139,3 +151,21 @@ class SiteThemeLoader (BaseLoader):
         except:
             pass
         raise TemplateDoesNotExist(template_name)
+
+# TODO: this is probably ill-conceived, but the code might be useful in something like a templatetag that displays
+#       a "This page is available in LANGUAGE" banner.
+def translate(request, leaf):
+    # If the page was specifically requested, or is already in the user's language, do nothing.
+    if 'notrans' in request.GET or request.LANGUAGE_CODE == leaf.language:
+        return
+    # Get the "root" leaf, i.e. the one other translations are based on.
+    root_leaf = leaf.translation_of if leaf.translation_of else leaf
+    # If the root leaf is in the user's language, redirect to it.
+    if root_leaf.language == request.LANGUAGE_CODE:
+        return redirect(root_leaf.resolved.url)
+    # Otherwise, try to find a translation of the root leaf in the user's language.
+    try:
+        trans_leaf = root_leaf.translations.get(language=request.LANGUAGE_CODE)
+        return redirect(trans_leaf.resolved.url)
+    except:
+        pass

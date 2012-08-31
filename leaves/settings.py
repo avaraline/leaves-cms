@@ -97,8 +97,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -111,11 +112,13 @@ ROOT_URLCONF = 'leaves.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'leaves.wsgi.application'
 
+# Fallback template location. Normally unused, since templates are determined by the SiteThemeLoader.
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (
+    # Django apps (don't mess with these).
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -123,9 +126,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    # Leaves core and plugins.
+
+    # Leaves core and plugins (uncomment and syncdb to install).
     'leaves',
-    'leaves.plugins.blog',
+    #'leaves.plugins.blog',
+
     # Installed themes.
     'themes.stream',
 )
@@ -159,9 +164,11 @@ LOGGING = {
     }
 }
 
+# Leaves global settings.
 LEAVES_DEFAULT_LEAF_STATUS = 'draft'
 LEAVES_DEFAULT_COMMENT_STATUS = 'pending'
 
+# Django debug toolbar configs.
 if DEBUG_TOOLBAR:
     INSTALLED_APPS += ('debug_toolbar',)
     INTERNAL_IPS = ('127.0.0.1',)

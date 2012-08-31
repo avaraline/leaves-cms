@@ -38,12 +38,16 @@ class LeavesSiteMiddleware (object):
         request_context.site = request.site
         # Also keep track of the current user. Helpful for template tags.
         request_context.user = request.user
+        # Keep track of the current language. Helpful for template tags.
+        request_context.language = request.LANGUAGE_CODE
 
     def process_response(self, request, response):
         if hasattr(request_context, 'site'):
             del request_context.site
         if hasattr(request_context, 'user'):
             del request_context.user
+        if hasattr(request_context, 'language'):
+            del request_context.language
         return response
 
 class LeavesFallbackMiddleware (object):

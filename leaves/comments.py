@@ -50,7 +50,7 @@ def make_comment_form(leaf, data=None, site=None, user=None):
     status = 'published' if user and user.is_authenticated() else site.preferences.default_comment_status
     return CommentForm(data, leaf=leaf, user=user, status=status)
 
-def handle_comment(request, leaf):
+def comment(request, leaf):
     # If this is not a POST request, we don't do anything.
     if request.method == 'POST':
         # If the leaf does not allow comments, redirect back to the leaf as a GET, with a message.
